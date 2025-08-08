@@ -24,7 +24,6 @@ import {
   Trash2,
   Plus,
   GripVertical,
-  Edit2,
   X,
 } from "lucide-react";
 import { Variation, VariationOption } from "@/types/variations";
@@ -176,41 +175,44 @@ export default function SortableVariation({
 
         <div className="flex-1 flex items-center gap-2">
           {isEditingName ? (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={editedName}
-                onChange={(e) => setEditedName(e.target.value)}
-                className="px-2 py-1 border border-gray-300 rounded text-sm flex-1"
-                placeholder="Option Name (e.g., Color, Size)"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleNameSave();
-                  if (e.key === "Escape") handleNameCancel();
-                }}
-                autoFocus
-              />
-              <button
-                onClick={handleNameSave}
-                className="text-green-600 hover:text-green-700"
-              >
-                ✓
-              </button>
-              <button
-                onClick={handleNameCancel}
-                className="text-red-600 hover:text-red-700"
-              >
-                ✕
-              </button>
-            </div>
+            <input
+              type="text"
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              className="px-2 py-1 border border-gray-300 rounded text-sm flex-1 font-medium text-gray-900"
+              placeholder="Option Name (e.g., Color, Size)"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleNameSave();
+                if (e.key === "Escape") handleNameCancel();
+              }}
+              onBlur={handleNameSave}
+              autoFocus
+            />
           ) : (
-            <div className="flex items-center gap-2">
-              <h3 className="font-medium text-gray-900">{variation.name}</h3>
-              <button
-                onClick={() => setIsEditingName(true)}
-                className="text-gray-400 hover:text-gray-600"
+            <div className="flex-1">
+              <h3
+                className="font-medium text-gray-900 cursor-pointer hover:text-blue-600"
+                onClick={
+                  variation.isOpen
+                    ? () => setIsEditingName(true)
+                    : () => onToggle(variation.id)
+                }
+                onDoubleClick={() => setIsEditingName(true)}
               >
-                <Edit2 size={16} />
-              </button>
+                {variation.name}
+              </h3>
+              {!variation.isOpen && variation.options.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {variation.options.map((option) => (
+                    <span
+                      key={option.id}
+                      className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
+                    >
+                      {option.name}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
