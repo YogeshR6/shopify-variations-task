@@ -15,6 +15,7 @@ export interface PriceCombination {
   id: string;
   combination: { [variationId: string]: string }; // variationId -> option value
   price: string;
+  units?: string; // available units for this combination
 }
 
 export interface PricingData {

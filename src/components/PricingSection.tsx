@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { ChevronDown, ChevronRight, IndianRupee } from "lucide-react";
+import { ChevronDown, ChevronRight, IndianRupee, Package } from "lucide-react";
 import { Variation, PriceCombination, PricingData } from "@/types/variations";
 
 interface PricingSectionProps {
@@ -109,25 +109,57 @@ export default function PricingSection({
     return existing?.price || "";
   };
 
-  // Update price for a specific combination
-  const updatePrice = (
+  // Get units for a specific combination
+  const getUnitsForCombination = (combination: {
+    [key: string]: string;
+  }): string => {
+    const existing = pricingData.combinations.find(
+      (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
+    );
+    return existing?.units || "";
+  };
+
+  // Update combination data (price and/or units)
+  const updateCombination = (
     combination: { [key: string]: string },
-    price: string
+    field: "price" | "units",
+    value: string
   ) => {
     const combinationId = `combo-${Object.values(combination).join(
       "-"
     )}-${Date.now()}`;
 
-    const updatedCombinations = pricingData.combinations.filter(
-      (pc) => JSON.stringify(pc.combination) !== JSON.stringify(combination)
+    // Find existing combination
+    const existingIndex = pricingData.combinations.findIndex(
+      (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
     );
 
-    if (price.trim()) {
-      updatedCombinations.push({
+    let updatedCombinations = [...pricingData.combinations];
+
+    if (existingIndex >= 0) {
+      // Update existing combination
+      updatedCombinations[existingIndex] = {
+        ...updatedCombinations[existingIndex],
+        [field]: value.trim(),
+      };
+    } else if (value.trim()) {
+      // Create new combination
+      const newCombination: PriceCombination = {
         id: combinationId,
         combination,
-        price: price.trim(),
-      });
+        price: field === "price" ? value.trim() : "",
+        units: field === "units" ? value.trim() : "",
+      };
+      updatedCombinations.push(newCombination);
+    }
+
+    // Remove combination if both price and units are empty
+    if (
+      existingIndex >= 0 &&
+      !updatedCombinations[existingIndex].price &&
+      !updatedCombinations[existingIndex].units
+    ) {
+      updatedCombinations.splice(existingIndex, 1);
     }
 
     onPricingUpdate({
@@ -135,6 +167,31 @@ export default function PricingSection({
       combinations: updatedCombinations,
     });
   };
+
+  // Update price for a specific combination (legacy function for compatibility)
+  const updatePrice = (
+    combination: { [key: string]: string },
+    price: string
+  ) => {
+    updateCombination(combination, "price", price);
+  };
+
+  // Update units for a specific combination
+  const updateUnits = (
+    combination: { [key: string]: string },
+    units: string
+  ) => {
+    updateCombination(combination, "units", units);
+  };
+
+  // Calculate total available units across all combinations
+  const getTotalAvailableUnits = useMemo(() => {
+    return allCombinations.reduce((total, combination) => {
+      const units = getUnitsForCombination(combination);
+      const unitsNumber = parseInt(units) || 0;
+      return total + unitsNumber;
+    }, 0);
+  }, [allCombinations, pricingData.combinations]);
 
   // Get price range for a group
   const getGroupPriceRange = (
@@ -166,21 +223,29 @@ export default function PricingSection({
     const updatedCombinations = [...pricingData.combinations];
 
     combinations.forEach((combination) => {
-      // Remove existing price for this combination
+      // Find existing combination to preserve units
       const existingIndex = updatedCombinations.findIndex(
         (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
       );
 
-      if (existingIndex >= 0) {
-        updatedCombinations.splice(existingIndex, 1);
-      }
+      const existingUnits =
+        existingIndex >= 0 ? updatedCombinations[existingIndex].units : "";
 
-      // Add new price
-      updatedCombinations.push({
-        id: `combo-${Object.values(combination).join("-")}-${Date.now()}`,
-        combination,
-        price: price.trim(),
-      });
+      if (existingIndex >= 0) {
+        // Update existing combination, preserving units
+        updatedCombinations[existingIndex] = {
+          ...updatedCombinations[existingIndex],
+          price: price.trim(),
+        };
+      } else {
+        // Add new combination
+        updatedCombinations.push({
+          id: `combo-${Object.values(combination).join("-")}-${Date.now()}`,
+          combination,
+          price: price.trim(),
+          units: existingUnits,
+        });
+      }
     });
 
     // Update group price
@@ -401,19 +466,37 @@ export default function PricingSection({
                           </div>
                         </div>
 
-                        <div className="ml-4 flex items-center gap-2">
-                          <IndianRupee size={16} className="text-gray-400" />
-                          <input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="0.00"
-                            value={getPriceForCombination(combination)}
-                            onChange={(e) =>
-                              updatePrice(combination, e.target.value)
-                            }
-                            className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
+                        <div className="ml-4 flex items-center gap-4">
+                          {/* Price Input */}
+                          <div className="flex items-center gap-2">
+                            <IndianRupee size={16} className="text-gray-400" />
+                            <input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              placeholder="0.00"
+                              value={getPriceForCombination(combination)}
+                              onChange={(e) =>
+                                updatePrice(combination, e.target.value)
+                              }
+                              className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
+
+                          {/* Units Input */}
+                          <div className="flex items-center gap-2">
+                            <Package size={16} className="text-gray-400" />
+                            <input
+                              type="number"
+                              min="0"
+                              placeholder="Units"
+                              value={getUnitsForCombination(combination)}
+                              onChange={(e) =>
+                                updateUnits(combination, e.target.value)
+                              }
+                              className="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -427,8 +510,10 @@ export default function PricingSection({
 
       {allCombinations.length > 0 && (
         <div className="mt-6 text-sm text-gray-500 text-center">
-          {allCombinations.length} combination
-          {allCombinations.length !== 1 ? "s" : ""} total
+          <div className="flex items-center justify-center gap-2">
+            <Package size={16} className="text-gray-400" />
+            <span>{getTotalAvailableUnits} total available units</span>
+          </div>
         </div>
       )}
     </div>
