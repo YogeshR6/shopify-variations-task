@@ -146,7 +146,7 @@ export default function PricingSection({
       (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
     );
 
-    let updatedCombinations = [...pricingData.combinations];
+    const updatedCombinations = [...pricingData.combinations];
 
     if (existingIndex >= 0) {
       // Update existing combination
@@ -233,7 +233,7 @@ export default function PricingSection({
       (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
     );
 
-    let updatedCombinations = [...pricingData.combinations];
+    const updatedCombinations = [...pricingData.combinations];
 
     if (existingIndex >= 0) {
       // Update existing combination

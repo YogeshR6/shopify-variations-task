@@ -171,7 +171,7 @@ export default function VariationsSection() {
             No variations added yet
           </div>
           <div className="text-gray-400">
-            Click "Add Variation" to get started
+            Click &quot;Add Variation&quot; to get started
           </div>
         </div>
       ) : (
