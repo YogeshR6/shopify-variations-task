@@ -1,99 +1,247 @@
-# Shopify Product Variations Manager
+# Shopify Product Variations Task
 
-A Next.js TypeScript application that allows users to manage product variations with a drag-and-drop interface.
+A comprehensive Next.js TypeScript application for managing product variations with advanced pricing, inventory tracking, and profit analysis features.
 
-## Features
+## ✨ Features
 
-- ✅ **Add Variations**: Click the "Add Variation" button to create new product variations
-- ✅ **Delete Variations**: Remove variations using the trash icon
-- ✅ **Drag & Drop Reordering**: Reorder variations by dragging them using the grip handle
-- ✅ **Accordion Interface**: Each variation is displayed as an accordion that can be expanded/collapsed
-- ✅ **Editable Variation Names**: Click the edit icon to rename variations inline
-- ✅ **Add Options**: Each variation can contain multiple options with name-value pairs
-- ✅ **Manage Options**: Edit or delete individual options within each variation
-- ✅ **Responsive Design**: Works on desktop and mobile devices
+### 🎯 Variation Management
 
-## Technology Stack
+- ✅ **Add/Delete Variations**: Create and remove product variations with intuitive controls
+- ✅ **Drag & Drop Reordering**: Reorder variations and options by dragging with grip handles
+- ✅ **Accordion Interface**: Expandable/collapsible variations with smooth animations
+- ✅ **Inline Name Editing**: Click variation names to edit directly (no confirmation needed)
+- ✅ **Smart Navigation**: Click closed variations to open, click open variations to edit
+- ✅ **Option Value Preview**: View option values as tags when variations are closed
+- ✅ **Auto-Focus**: New variations and options automatically focus for quick editing
+- ✅ **Persistent Storage**: All data saved to localStorage and restored on page refresh
 
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type safety and better developer experience
-- **Tailwind CSS** - Utility-first CSS framework for styling
-- **@dnd-kit** - Modern drag-and-drop library for React
-- **Lucide React** - Beautiful icon library
+### 💰 Advanced Pricing & Inventory
 
-## Getting Started
+- ✅ **Price Combinations**: Automatically generate all possible variation combinations
+- ✅ **Grouping System**: Group price combinations by any variation for better organization
+- ✅ **Group Pricing**: Set parent prices for entire groups with automatic range calculation
+- ✅ **Inventory Tracking**: Track available units for each combination
+- ✅ **Total Units Display**: Real-time calculation of total available inventory
+- ✅ **Currency Support**: Indian Rupee (₹) currency formatting throughout
+- ✅ **Accordion Groups**: Organize price combinations in expandable groups
 
-1. **Install dependencies:**
+### 📊 Profit Analysis
+
+- ✅ **Cost Management**: Track cost per item for each combination
+- ✅ **Profit Calculation**: Automatic profit calculation (Price - Cost)
+- ✅ **Margin Analysis**: Real-time margin percentage calculation
+- ✅ **Interactive Popup**: Click any combination to open detailed editing popup
+- ✅ **Synchronized Updates**: Changes in popup automatically update main interface
+
+### 🎨 User Experience
+
+- ✅ **Responsive Design**: Optimized for desktop and mobile devices
+- ✅ **Intuitive Icons**: Clear visual indicators using Lucide React icons
+- ✅ **Hover Effects**: Interactive feedback on all clickable elements
+- ✅ **Loading States**: Smooth transitions and state management
+- ✅ **Error Handling**: Graceful error handling for localStorage operations
+
+## 🛠 Technology Stack
+
+- **Next.js 15** - React framework with App Router and TypeScript
+- **TypeScript** - Full type safety with comprehensive interfaces
+- **Tailwind CSS** - Utility-first CSS framework with custom components
+- **@dnd-kit** - Modern drag-and-drop library with accessibility support
+  - `@dnd-kit/core` - Core drag-and-drop functionality
+  - `@dnd-kit/sortable` - Sortable list implementation
+  - `@dnd-kit/utilities` - Helper utilities
+  - `@dnd-kit/modifiers` - Drag behavior modifiers
+- **Lucide React** - Beautiful, customizable icon library
+
+## 🚀 Getting Started
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone <repository-url>
+   cd shopify-variations-task
+   ```
+
+2. **Install dependencies:**
 
    ```bash
    npm install
    ```
 
-2. **Run the development server:**
+3. **Run the development server:**
 
    ```bash
    npm run dev
    ```
 
-3. **Open your browser:**
+4. **Open your browser:**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Usage
+## 📖 Usage Guide
 
-### Adding Variations
+### Managing Variations
 
-1. Click the "Add Variation" button in the top right
-2. A new variation will be created with a default name
-3. Click the edit icon next to the variation name to rename it
+1. **Adding Variations**
+
+   - Click "Add Variation" button
+   - Name field auto-focuses for immediate editing
+   - Press Enter to save, Escape to cancel
+
+2. **Editing Variation Names**
+
+   - When closed: Click variation name to expand
+   - When open: Click variation name to edit
+   - Double-click anytime to edit directly
+   - Changes save automatically when clicking away
+
+3. **Reordering Variations**
+   - Drag using the grip handle (⋮⋮) to reorder
+   - Order persists across page refreshes
 
 ### Managing Options
 
-1. Click on a variation to expand it
-2. Use the "Add New Option" section at the bottom to add options
-3. Fill in both the option name (e.g., "Color") and value (e.g., "Red")
-4. Click "Add Option" to save
-5. Edit existing options directly in their input fields
-6. Delete options using the X button
+1. **Adding Options**
 
-### Reordering Variations
+   - Expand a variation and click "Add Option"
+   - Input field auto-focuses for the option value
+   - Press Enter to save, Escape to cancel
 
-1. Hover over the grip icon (⋮⋮) on the left side of any variation
-2. Click and drag to reorder the variations
-3. The order will be maintained until you refresh the page
+2. **Editing Options**
+   - Click directly on option values to edit inline
+   - Drag to reorder options within a variation
+   - Use X button to delete options
 
-## Project Structure
+### Price Management
+
+1. **Setting Individual Prices**
+
+   - Price combinations are auto-generated from variations
+   - Click any combination row to open the detailed popup
+   - Set price and cost per item for profit analysis
+
+2. **Group Pricing**
+
+   - Use the "Group by" dropdown to organize combinations
+   - Set parent prices for entire groups
+   - Parent price shows as range when children have different prices
+
+3. **Inventory Tracking**
+   - Set available units for each combination
+   - View total available units at the bottom
+   - Units are tracked independently from pricing
+
+### Profit Analysis
+
+1. **Cost Tracking**
+
+   - Set cost per item in the combination popup
+   - View real-time profit calculation (Price - Cost)
+   - Monitor margin percentage for each combination
+
+2. **Financial Overview**
+   - Green indicators for positive profits/margins
+   - Red indicators for losses
+   - Automatic calculations update as you type
+
+## 📁 Project Structure
 
 ```
 src/
 ├── app/
-│   ├── page.tsx              # Main page component
-│   └── layout.tsx            # Root layout
+│   ├── page.tsx                    # Main application page
+│   ├── layout.tsx                  # Root layout with metadata
+│   └── globals.css                 # Global styles
 ├── components/
-│   ├── VariationsSection.tsx # Main variations container with DnD
-│   └── SortableVariation.tsx # Individual variation component
+│   ├── VariationsSection.tsx       # Main container with drag-drop
+│   ├── SortableVariation.tsx       # Individual variation component
+│   ├── SortableOption.tsx          # Individual option component
+│   ├── PricingSection.tsx          # Price combinations & inventory
+│   └── CombinationEditPopup.tsx    # Profit analysis popup
 └── types/
-    └── variations.ts         # TypeScript interfaces
+    └── variations.ts               # TypeScript interfaces
 ```
 
-## Key Components
+## 🧩 Key Components
 
 ### VariationsSection
 
-- Manages the overall state of all variations
-- Implements drag-and-drop functionality using @dnd-kit
-- Handles adding/deleting variations
+- Central state management for all variations and pricing data
+- Drag-and-drop context setup with @dnd-kit
+- localStorage persistence for both variations and pricing
+- Integration between variation management and pricing systems
 
 ### SortableVariation
 
-- Individual variation component with accordion interface
-- Manages options within each variation
-- Handles inline editing of variation names
-- Implements the drag handle for reordering
+- Accordion-style variation display with smooth animations
+- Inline name editing with auto-focus and keyboard shortcuts
+- Option value preview when closed
+- Nested drag-and-drop for options management
 
-## Future Enhancements
+### PricingSection
 
-- Persist variations to localStorage or database
-- Add validation for option names/values
-- Implement variation templates
-- Add bulk operations for options
-- Export/import functionality
+- Automatic combination generation from all variations
+- Flexible grouping system with accordion interface
+- Parent/child pricing relationships
+- Inventory tracking and total calculations
+
+### CombinationEditPopup
+
+- Modal interface for detailed combination editing
+- Real-time profit and margin calculations
+- Cost management with visual feedback
+- Synchronized updates with main interface
+
+## 🔧 Advanced Features
+
+### Data Persistence
+
+- **Variations**: Stored in `localStorage` with key `product-variations`
+- **Pricing Data**: Stored separately with key `pricing-data`
+- **Auto-Recovery**: Graceful handling of corrupted localStorage data
+- **Real-time Sync**: Changes immediately persisted and restored
+
+### Accessibility
+
+- **Keyboard Navigation**: Full support for keyboard-only users
+- **Screen Reader Support**: Proper ARIA labels and semantic HTML
+- **Focus Management**: Logical tab order and focus indicators
+- **Drag-and-Drop**: Accessible drag-and-drop with @dnd-kit
+
+### Performance Optimizations
+
+- **useMemo**: Expensive calculations cached and optimized
+- **Conditional Rendering**: Components render only when needed
+- **Efficient Updates**: Minimal re-renders with proper state management
+- **Lazy Loading**: Components loaded as needed
+
+## 🎨 Styling & Theme
+
+- **Design System**: Consistent spacing, colors, and typography
+- **Interactive States**: Hover, focus, and active state styling
+- **Responsive Layout**: Mobile-first approach with Tailwind CSS
+- **Currency Formatting**: Proper Indian Rupee symbol placement
+- **Visual Hierarchy**: Clear information architecture and grouping
+
+## 🚀 Future Enhancements
+
+### Planned Features
+
+- **Export/Import**: JSON and CSV data export/import functionality
+- **Variation Templates**: Pre-built templates for common product types
+- **Bulk Operations**: Mass edit prices, costs, or inventory
+- **Analytics Dashboard**: Sales performance and profit analytics
+- **Multi-Currency**: Support for multiple currencies with conversion
+- **Product Images**: Image management for variations and options
+- **Barcode Generation**: Automatic barcode/SKU generation
+- **API Integration**: Connect with e-commerce platforms
+- **Advanced Filtering**: Search and filter combinations
+- **Pricing Rules**: Automatic pricing based on rules and formulas
+
+### Technical Improvements
+
+- **Database Integration**: Replace localStorage with proper database
+- **Real-time Collaboration**: Multiple users editing simultaneously
+- **Offline Support**: PWA functionality with offline capabilities
+- **Unit Testing**: Comprehensive test coverage with Jest/RTL
+- **E2E Testing**: Playwright tests for user workflows
+- **Performance Monitoring**: Analytics and performance tracking
