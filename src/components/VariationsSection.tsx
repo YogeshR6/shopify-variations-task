@@ -34,6 +34,8 @@ export default function VariationsSection() {
   const [pricingData, setPricingData] = useState<PricingData>({
     combinations: [],
     groupBy: null,
+    groupPrices: {},
+    openGroups: {},
   });
   const [isLoaded, setIsLoaded] = useState(false);
 

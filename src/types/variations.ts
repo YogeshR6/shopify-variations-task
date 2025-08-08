@@ -20,4 +20,6 @@ export interface PriceCombination {
 export interface PricingData {
   combinations: PriceCombination[];
   groupBy: string | null; // variationId to group by
+  groupPrices: { [groupName: string]: string }; // group name -> price
+  openGroups: { [groupName: string]: boolean }; // track which groups are open
 }
