@@ -180,6 +180,7 @@ export default function SortableVariation({
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
               className="px-2 py-1 border border-gray-300 rounded text-sm flex-1 font-medium text-gray-900"
+              style={{ color: "#111827" }}
               placeholder="Option Name (e.g., Color, Size)"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleNameSave();
@@ -282,7 +283,8 @@ export default function SortableVariation({
                       type="text"
                       value={newOptionName}
                       onChange={(e) => setNewOptionName(e.target.value)}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg"
+                      className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg"
+                      style={{ color: "#111827" }}
                       placeholder="e.g., Red, Large, Cotton"
                       autoFocus={autoFocusNewOption}
                       onFocus={() => setAutoFocusNewOption(false)}

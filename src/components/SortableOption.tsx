@@ -52,7 +52,8 @@ export default function SortableOption({
           type="text"
           value={option.name}
           onChange={(e) => onUpdate(option.id, "name", e.target.value)}
-          className="w-full px-2 py-1 text-sm border border-gray-300 rounded"
+          className="w-full px-2 py-1 text-sm text-gray-900 border border-gray-300 rounded"
+          style={{ color: "#111827" }}
           placeholder="e.g., Red, Large, Cotton"
         />
       </div>

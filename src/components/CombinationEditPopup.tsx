@@ -73,7 +73,7 @@ export default function CombinationEditPopup({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50"
       onClick={handleOverlayClick}
     >
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
@@ -114,7 +114,8 @@ export default function CombinationEditPopup({
                 placeholder="0.00"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 px-3 py-2 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                style={{ color: "#111827" }}
               />
             </div>
           </div>
@@ -133,7 +134,8 @@ export default function CombinationEditPopup({
                 placeholder="0.00"
                 value={costPerItem}
                 onChange={(e) => setCostPerItem(e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="flex-1 px-3 py-2 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                style={{ color: "#111827" }}
               />
             </div>
           </div>

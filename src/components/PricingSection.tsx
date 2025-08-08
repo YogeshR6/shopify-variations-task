@@ -415,7 +415,8 @@ export default function PricingSection({
             <select
               value={groupBy || variationsWithOptions[0]?.id || ""}
               onChange={(e) => handleGroupByChange(e.target.value || null)}
-              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              style={{ color: "#111827" }}
             >
               {variationsWithOptions.map((variation) => (
                 <option key={variation.id} value={variation.id}>
@@ -517,7 +518,8 @@ export default function PricingSection({
                               );
                             }
                           }}
-                          className="w-32 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          className="w-32 px-2 py-1 text-sm text-gray-900 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          style={{ color: "#111827" }}
                         />
                       </div>
                     </div>
@@ -568,7 +570,8 @@ export default function PricingSection({
                               onChange={(e) =>
                                 updatePrice(combination, e.target.value)
                               }
-                              className="w-24 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-24 px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              style={{ color: "#111827" }}
                             />
                           </div>
 
@@ -583,7 +586,8 @@ export default function PricingSection({
                               onChange={(e) =>
                                 updateUnits(combination, e.target.value)
                               }
-                              className="w-20 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-20 px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                              style={{ color: "#111827" }}
                             />
                           </div>
                         </div>
