@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { ChevronDown, ChevronRight, IndianRupee, Package } from "lucide-react";
 import { Variation, PriceCombination, PricingData } from "@/types/variations";
+import CombinationEditPopup from "./CombinationEditPopup";
 
 interface PricingSectionProps {
   variations: Variation[];
@@ -27,6 +28,17 @@ export default function PricingSection({
   const [openGroups, setOpenGroups] = useState<{ [key: string]: boolean }>(
     pricingData.openGroups || {}
   );
+
+  // Popup state
+  const [popupState, setPopupState] = useState<{
+    isOpen: boolean;
+    combination: { [key: string]: string } | null;
+    priceCombination: PriceCombination | null;
+  }>({
+    isOpen: false,
+    combination: null,
+    priceCombination: null,
+  });
 
   // Update groupBy when variations change and no groupBy is set
   useEffect(() => {
@@ -153,11 +165,12 @@ export default function PricingSection({
       updatedCombinations.push(newCombination);
     }
 
-    // Remove combination if both price and units are empty
+    // Remove combination if price, units, and costPerItem are all empty
     if (
       existingIndex >= 0 &&
       !updatedCombinations[existingIndex].price &&
-      !updatedCombinations[existingIndex].units
+      !updatedCombinations[existingIndex].units &&
+      !updatedCombinations[existingIndex].costPerItem
     ) {
       updatedCombinations.splice(existingIndex, 1);
     }
@@ -182,6 +195,78 @@ export default function PricingSection({
     units: string
   ) => {
     updateCombination(combination, "units", units);
+  };
+
+  // Open popup for editing combination
+  const openPopup = (combination: { [key: string]: string }) => {
+    const existingPriceCombination = pricingData.combinations.find(
+      (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
+    );
+
+    setPopupState({
+      isOpen: true,
+      combination,
+      priceCombination: existingPriceCombination || null,
+    });
+  };
+
+  // Close popup
+  const closePopup = () => {
+    setPopupState({
+      isOpen: false,
+      combination: null,
+      priceCombination: null,
+    });
+  };
+
+  // Handle popup updates (price and costPerItem)
+  const handlePopupUpdate = (
+    combination: { [key: string]: string },
+    updates: Partial<PriceCombination>
+  ) => {
+    const combinationId = `combo-${Object.values(combination).join(
+      "-"
+    )}-${Date.now()}`;
+
+    // Find existing combination
+    const existingIndex = pricingData.combinations.findIndex(
+      (pc) => JSON.stringify(pc.combination) === JSON.stringify(combination)
+    );
+
+    let updatedCombinations = [...pricingData.combinations];
+
+    if (existingIndex >= 0) {
+      // Update existing combination
+      updatedCombinations[existingIndex] = {
+        ...updatedCombinations[existingIndex],
+        ...updates,
+      };
+    } else if (updates.price?.trim() || updates.costPerItem?.trim()) {
+      // Create new combination
+      const newCombination: PriceCombination = {
+        id: combinationId,
+        combination,
+        price: updates.price?.trim() || "",
+        units: "",
+        costPerItem: updates.costPerItem?.trim() || "",
+      };
+      updatedCombinations.push(newCombination);
+    }
+
+    // Remove combination if all fields are empty
+    if (
+      existingIndex >= 0 &&
+      !updatedCombinations[existingIndex].price &&
+      !updatedCombinations[existingIndex].units &&
+      !updatedCombinations[existingIndex].costPerItem
+    ) {
+      updatedCombinations.splice(existingIndex, 1);
+    }
+
+    onPricingUpdate({
+      ...pricingData,
+      combinations: updatedCombinations,
+    });
   };
 
   // Calculate total available units across all combinations
@@ -445,7 +530,8 @@ export default function PricingSection({
                     {combinations.map((combination, index) => (
                       <div
                         key={index}
-                        className="p-4 flex items-center justify-between hover:bg-gray-50"
+                        className="p-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                        onClick={() => openPopup(combination)}
                       >
                         <div className="flex-1">
                           <div className="text-sm font-medium text-gray-900 mb-1">
@@ -466,7 +552,10 @@ export default function PricingSection({
                           </div>
                         </div>
 
-                        <div className="ml-4 flex items-center gap-4">
+                        <div
+                          className="ml-4 flex items-center gap-4"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           {/* Price Input */}
                           <div className="flex items-center gap-2">
                             <IndianRupee size={16} className="text-gray-400" />
@@ -516,6 +605,16 @@ export default function PricingSection({
           </div>
         </div>
       )}
+
+      {/* Combination Edit Popup */}
+      <CombinationEditPopup
+        combination={popupState.combination || {}}
+        priceCombination={popupState.priceCombination || undefined}
+        variations={variationsWithOptions}
+        isOpen={popupState.isOpen}
+        onClose={closePopup}
+        onUpdate={handlePopupUpdate}
+      />
     </div>
   );
 }

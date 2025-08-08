@@ -16,6 +16,7 @@ export interface PriceCombination {
   combination: { [variationId: string]: string }; // variationId -> option value
   price: string;
   units?: string; // available units for this combination
+  costPerItem?: string; // cost per item for profit calculation
 }
 
 export interface PricingData {
