@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -22,11 +22,60 @@ import {
   restrictToParentElement,
 } from "@dnd-kit/modifiers";
 import { Plus } from "lucide-react";
-import { Variation } from "@/types/variations";
+import { Variation, PricingData } from "@/types/variations";
 import SortableVariation from "./SortableVariation";
+import PricingSection from "./PricingSection";
+
+const LOCAL_STORAGE_KEY = "shopify-variations";
+const PRICING_STORAGE_KEY = "shopify-pricing";
 
 export default function VariationsSection() {
   const [variations, setVariations] = useState<Variation[]>([]);
+  const [pricingData, setPricingData] = useState<PricingData>({
+    combinations: [],
+    groupBy: null,
+  });
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedVariations = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const savedPricing = localStorage.getItem(PRICING_STORAGE_KEY);
+
+    if (savedVariations) {
+      try {
+        const parsedVariations = JSON.parse(savedVariations);
+        setVariations(parsedVariations);
+      } catch (error) {
+        console.error("Error loading variations from localStorage:", error);
+      }
+    }
+
+    if (savedPricing) {
+      try {
+        const parsedPricing = JSON.parse(savedPricing);
+        setPricingData(parsedPricing);
+      } catch (error) {
+        console.error("Error loading pricing from localStorage:", error);
+      }
+    }
+
+    setIsLoaded(true);
+  }, []);
+
+  // Save to localStorage whenever variations change
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(variations));
+    }
+  }, [variations, isLoaded]);
+
+  // Save to localStorage whenever pricing data changes
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem(PRICING_STORAGE_KEY, JSON.stringify(pricingData));
+    }
+  }, [pricingData, isLoaded]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -38,9 +87,10 @@ export default function VariationsSection() {
   const addVariation = () => {
     const newVariation: Variation = {
       id: `variation-${Date.now()}`,
-      name: `Variation ${variations.length + 1}`,
+      name: `Option ${variations.length + 1}`,
       options: [],
-      isOpen: false,
+      isOpen: true,
+      isEditingName: true,
     };
     setVariations([...variations, newVariation]);
   };
@@ -76,6 +126,10 @@ export default function VariationsSection() {
         variation.id === id ? { ...variation, isOpen: false } : variation
       )
     );
+  };
+
+  const handlePricingUpdate = (newPricingData: PricingData) => {
+    setPricingData(newPricingData);
   };
 
   function handleDragEnd(event: DragEndEvent) {
@@ -144,6 +198,13 @@ export default function VariationsSection() {
           </SortableContext>
         </DndContext>
       )}
+
+      {/* Pricing Section */}
+      <PricingSection
+        variations={variations}
+        pricingData={pricingData}
+        onPricingUpdate={handlePricingUpdate}
+      />
     </div>
   );
 }
